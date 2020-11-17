@@ -2,6 +2,10 @@ package com.cs322.AuthService.Model;
 
 import java.io.Serializable;
 
+/**
+ *  JWT Toke Response POJO
+ */
+
 public class JwtTokenResponse implements Serializable {
 
     private static final long serialVersionUID = 8317676219297719109L;

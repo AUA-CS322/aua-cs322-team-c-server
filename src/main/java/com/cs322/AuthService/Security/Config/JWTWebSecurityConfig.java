@@ -1,5 +1,6 @@
 package com.cs322.AuthService.Security.Config;
 
+import com.cs322.AuthService.Security.JwtTokenAuthorizationOncePerRequestFilter;
 import com.cs322.AuthService.Security.JwtUnAuthorizedResponseAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,7 +20,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -31,8 +31,8 @@ public class JWTWebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService jwtInMemoryUserDetailsService;
 
-//    @Autowired
-//    private JwtTokenAuthorizationOncePerRequestFilter jwtAuthenticationTokenFilter;
+    @Autowired
+    private JwtTokenAuthorizationOncePerRequestFilter jwtAuthenticationTokenFilter;
 
     @Value("${jwt.get.token.uri}")
     private String authenticationPath;
@@ -64,21 +64,21 @@ public class JWTWebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .anyRequest().authenticated();
 
-//        httpSecurity
-//                .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
-//
-//        httpSecurity
-//                .headers()
-//                .frameOptions().sameOrigin()  //H2 Console Needs this setting
-//                .cacheControl(); //disable caching
+        httpSecurity
+                .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+
+        httpSecurity
+                .headers()
+                .frameOptions().sameOrigin()
+                .cacheControl();
     }
 
     @Override
-    public void configure(WebSecurity webSecurity) throws Exception {
+    public void configure(WebSecurity webSecurity) {
         webSecurity
                 .ignoring()
                 .antMatchers(
-                        HttpMethod.GET,
+                        HttpMethod.POST,
                         authenticationPath
                 )
                 .antMatchers(HttpMethod.OPTIONS, "/**")
@@ -86,10 +86,7 @@ public class JWTWebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .ignoring()
                 .antMatchers(
                         HttpMethod.GET,
-                        "/" //Other Stuff You want to Ignore
-                )
-                .and()
-                .ignoring()
-                .antMatchers("/h2-console/**/**");//Should not be in Production!
+                        "/"
+                );
     }
 }

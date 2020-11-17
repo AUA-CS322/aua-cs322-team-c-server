@@ -22,7 +22,7 @@ public class JwtInMemoryUserDetailsService implements UserDetailsService {
 
     @PostConstruct
     private void getAllUsers() throws FileNotFoundException {
-        JsonElement root = new JsonParser().parse(new FileReader("src/main/java/com/cs322/AuthService/Security/users.json"));
+        JsonElement root = new JsonParser().parse(new FileReader("src/main/resources/data/users.json"));
         JsonArray object = root.getAsJsonArray();
 
         Gson gson = new Gson();

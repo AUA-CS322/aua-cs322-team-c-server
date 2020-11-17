@@ -6,7 +6,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.UUID;
 
-// User POJO
+/**
+ *  User POJO
+ */
+
 public class User implements UserDetails {
     private UUID id;
     private String email;
