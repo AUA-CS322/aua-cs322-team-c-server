@@ -1,6 +1,6 @@
-package com.cs322.AuthService.Security;
+package com.cs322.utils;
 
-import com.cs322.AuthService.Model.User;
+import com.cs322.models.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Clock;
 import io.jsonwebtoken.Jwts;

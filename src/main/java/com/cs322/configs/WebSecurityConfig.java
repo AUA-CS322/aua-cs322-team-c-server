@@ -1,7 +1,7 @@
-package com.cs322.AuthService.Security.Config;
+package com.cs322.configs;
 
-import com.cs322.AuthService.Security.JwtTokenAuthorizationOncePerRequestFilter;
-import com.cs322.AuthService.Security.JwtUnAuthorizedResponseAuthenticationEntryPoint;
+import com.cs322.filters.JwtTokenAuthorizationOncePerRequestFilter;
+import com.cs322.services.JwtUnAuthorizedResponseAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class JWTWebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private JwtUnAuthorizedResponseAuthenticationEntryPoint jwtUnAuthorizedResponseAuthenticationEntryPoint;

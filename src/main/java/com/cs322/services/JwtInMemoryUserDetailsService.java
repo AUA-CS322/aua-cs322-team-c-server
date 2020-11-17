@@ -1,12 +1,10 @@
-package com.cs322.AuthService.Security;
+package com.cs322.services;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.*;
 
-import com.cs322.AuthService.Model.User;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.cs322.models.User;
 import com.google.gson.*;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

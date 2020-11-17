@@ -1,5 +1,6 @@
-package com.cs322.AuthService.Security;
+package com.cs322.filters;
 
+import com.cs322.utils.JwtTokenUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

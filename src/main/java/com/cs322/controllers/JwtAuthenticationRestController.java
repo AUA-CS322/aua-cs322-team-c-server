@@ -1,16 +1,12 @@
-package com.cs322.AuthService.Security.Controller;
+package com.cs322.controllers;
 
 
 import com.cs322.AuthService.Exceptions.AuthenticationException;
-import com.cs322.AuthService.Model.JwtTokenRequest;
-import com.cs322.AuthService.Model.JwtTokenResponse;
-import com.cs322.AuthService.Security.JwtInMemoryUserDetailsService;
-import com.cs322.AuthService.Security.JwtTokenUtil;
-import io.jsonwebtoken.Clock;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.cs322.models.JwtTokenRequest;
+import com.cs322.models.JwtTokenResponse;
+import com.cs322.services.JwtInMemoryUserDetailsService;
+import com.cs322.utils.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -18,11 +14,7 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import io.jsonwebtoken.impl.DefaultClock;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 @RestController
