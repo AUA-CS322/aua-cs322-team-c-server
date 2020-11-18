@@ -44,5 +44,26 @@ public class InMemoryUserDetailsService implements UserDetailsService {
 
         return user.get();
     }
-}
 
+    /**
+     * if there the query is exact username  we simply return that user
+     * otherwise we go over every user and look for the query
+     * in username and first,last names
+     */
+    public List<User> search(String query) {
+        List<User> list = new ArrayList<>();
+        if (inMemoryUsers.containsKey(query))
+            list.add(inMemoryUsers.get(query));
+        else {
+            inMemoryUsers.forEach((key, user) -> {
+                if (list.size() == 4) return;
+                if (user.getUsername().contains(query)
+                        || user.getFirstName().contains(query)
+                        || user.getLastName().contains(query)) {
+                    list.add(user);
+                }
+            });
+        }
+        return list;
+    }
+}
