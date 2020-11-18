@@ -1,17 +1,20 @@
 package com.cs322.services;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.util.*;
-
 import com.cs322.models.User;
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.*;
 
 @Service
 public class InMemoryUserDetailsService implements UserDetailsService {
@@ -46,15 +49,16 @@ public class InMemoryUserDetailsService implements UserDetailsService {
     }
 
     /**
-     * if there the query is exact username  we simply return that user
+     * if the query is exact username  we simply return that user
      * otherwise we go over every user and look for the query
      * in username and first,last names
      */
     public List<User> search(String query) {
         List<User> list = new ArrayList<>();
-        if (inMemoryUsers.containsKey(query))
+        if (StringUtils.isEmpty(query)) return list;
+        if (inMemoryUsers.containsKey(query)) {
             list.add(inMemoryUsers.get(query));
-        else {
+        } else {
             inMemoryUsers.forEach((key, user) -> {
                 if (list.size() == 4) return;
                 if (user.getUsername().contains(query)
