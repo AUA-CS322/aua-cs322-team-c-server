@@ -1,6 +1,7 @@
 package com.cs322.models;
 
 import lombok.*;
+import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 
@@ -20,4 +21,7 @@ public class JwtTokenRequest implements Serializable {
     private String username;
     private String password;
 
+    public boolean isEmpty() {
+        return StringUtils.isEmpty(username) || StringUtils.isEmpty(password);
+    }
 }

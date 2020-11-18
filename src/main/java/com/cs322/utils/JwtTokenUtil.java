@@ -6,7 +6,9 @@ import io.jsonwebtoken.Clock;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.DefaultClock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +20,9 @@ import java.util.function.Function;
 
 @Component
 public class JwtTokenUtil implements Serializable {
+
+    public JwtTokenUtil() {
+    }
 
     static final String CLAIM_KEY_USERNAME = "sub";
     static final String CLAIM_KEY_CREATED = "iat";

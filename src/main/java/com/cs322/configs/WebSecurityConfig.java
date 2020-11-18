@@ -39,8 +39,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-                .userDetailsService(jwtInMemoryUserDetailsService)
+        auth.userDetailsService(jwtInMemoryUserDetailsService)
                 .passwordEncoder(passwordEncoderBean());
     }
 

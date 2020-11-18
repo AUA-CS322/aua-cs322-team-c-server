@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 
 @Service
-public class JwtInMemoryUserDetailsService implements UserDetailsService {
+public class InMemoryUserDetailsService implements UserDetailsService {
 
-    static Map<String, User> inMemoryUsers = new HashMap<>();
+    private final static Map<String, User> inMemoryUsers = new HashMap<>();
 
     @PostConstruct
     private void getAllUsers() throws FileNotFoundException {
@@ -28,6 +28,10 @@ public class JwtInMemoryUserDetailsService implements UserDetailsService {
             User user = gson.fromJson(entry, User.class);
             inMemoryUsers.put(user.getUsername(), user);
         }
+    }
+
+    public User getUserByUsername(String username) {
+        return inMemoryUsers.get(username);
     }
 
     @Override

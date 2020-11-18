@@ -1,12 +1,15 @@
 package com.cs322.controllers;
 
 
-import com.cs322.AuthService.Exceptions.AuthenticationException;
+import com.cs322.exceptions.AuthenticationException;
+import com.cs322.models.JsonError;
 import com.cs322.models.JwtTokenRequest;
 import com.cs322.models.JwtTokenResponse;
-import com.cs322.services.JwtInMemoryUserDetailsService;
+import com.cs322.services.InMemoryUserDetailsService;
+import com.cs322.errors.ErrorMessages;
 import com.cs322.utils.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -18,27 +21,31 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Objects;
 
 @RestController
-@CrossOrigin(origins="http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200")
 public class JwtAuthenticationRestController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private JwtInMemoryUserDetailsService jwtInMemoryUserDetailsService;
+    private InMemoryUserDetailsService inMemoryUserDetailsService;
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
     @RequestMapping(value = "${jwt.get.token.uri}", method = RequestMethod.POST)
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtTokenRequest authenticationRequest) throws AuthenticationException {
+    public ResponseEntity<Object> createAuthenticationToken(JwtTokenRequest authenticationRequest) {
+        if (authenticationRequest.isEmpty())
+            return new ResponseEntity<>(new JsonError(ErrorMessages.MISSING_DATA.name()), HttpStatus.BAD_REQUEST);
+        try {
+            authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+        } catch (AuthenticationException e) {
+            return new ResponseEntity<>(new JsonError(e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
 
-        authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
-
-        final UserDetails userDetails = jwtInMemoryUserDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+        final UserDetails userDetails = inMemoryUserDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 
         final String token = jwtTokenUtil.generateToken(userDetails);
-
         return ResponseEntity.ok(new JwtTokenResponse(token));
     }
 
@@ -49,9 +56,9 @@ public class JwtAuthenticationRestController {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (DisabledException e) {
-            throw new AuthenticationException("USER_DISABLED", e);
+            throw new AuthenticationException(ErrorMessages.USER_DISABLED.name(), e);
         } catch (BadCredentialsException e) {
-            throw new AuthenticationException("INVALID_CREDENTIALS", e);
+            throw new AuthenticationException(ErrorMessages.INVALID_CREDENTIALS.name(), e);
         }
     }
 }

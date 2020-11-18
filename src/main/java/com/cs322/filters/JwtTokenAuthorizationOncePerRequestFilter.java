@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -18,6 +19,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -33,6 +35,14 @@ public class JwtTokenAuthorizationOncePerRequestFilter extends OncePerRequestFil
 
     @Value("${jwt.http.request.header}")
     private String tokenHeader;
+
+    private final AntPathMatcher matcher = new AntPathMatcher();
+    private final List<String> whiteList = List.of("/authenticate");
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        return whiteList.stream().anyMatch(s -> matcher.match(s, request.getServletPath()));
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {

@@ -1,5 +1,6 @@
 package com.cs322.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,9 +18,12 @@ import java.util.UUID;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class User implements UserDetails {
+    @JsonIgnore
     private UUID id;
     private String email;
     private String username;
+
+    @JsonIgnore
     private String password;
     private String position;
     private String department;
@@ -34,32 +38,38 @@ public class User implements UserDetails {
         return username;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isEnabled() {
         return true;
     }
 
 
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
     }
 
+    @JsonIgnore
     @Override
     public String getPassword() {
         return password;
