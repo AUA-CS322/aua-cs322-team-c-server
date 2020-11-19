@@ -44,7 +44,6 @@ public class InMemoryUserDetailsService implements UserDetailsService {
         if (!user.isPresent()) {
             throw new UsernameNotFoundException(String.format("USER_NOT_FOUND '%s'.", username));
         }
-
         return user.get();
     }
 

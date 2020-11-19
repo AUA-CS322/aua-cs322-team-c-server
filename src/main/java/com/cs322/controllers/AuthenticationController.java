@@ -22,7 +22,7 @@ import java.util.Objects;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
-public class JwtAuthenticationRestController {
+public class AuthenticationController {
 
     @Autowired
     private AuthenticationManager authenticationManager;

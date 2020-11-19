@@ -3,6 +3,7 @@ package com.cs322.configs;
 import com.cs322.filters.JwtTokenAuthorizationOncePerRequestFilter;
 import com.cs322.services.JwtUnAuthorizedResponseAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,6 +30,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private JwtUnAuthorizedResponseAuthenticationEntryPoint jwtUnAuthorizedResponseAuthenticationEntryPoint;
 
     @Autowired
+    @Qualifier("inMemoryUserDetailsService")
     private UserDetailsService jwtInMemoryUserDetailsService;
 
     @Autowired
