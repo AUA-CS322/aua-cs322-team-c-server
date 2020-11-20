@@ -12,10 +12,10 @@ import java.util.List;
 public class SearchController {
 
     @Autowired
-    private InMemoryUserDetailsService inMemoryDatabase;
+    private InMemoryUserDetailsService inMemoryUserDetailsService;
 
     @GetMapping("/search")
     public List<User> search(String query){
-        return inMemoryDatabase.search(query);
+        return inMemoryUserDetailsService.search(query);
     }
 }
