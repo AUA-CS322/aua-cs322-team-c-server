@@ -13,11 +13,15 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 public class UserController {
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtil jwtTokenUtil;
+
+    private final InMemoryUserDetailsService inMemoryDatabase;
 
     @Autowired
-    private InMemoryUserDetailsService inMemoryDatabase;
+    public UserController(JwtTokenUtil jwtTokenUtil, InMemoryUserDetailsService inMemoryDatabase) {
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.inMemoryDatabase = inMemoryDatabase;
+    }
 
     @GetMapping("/users/user")
     public User getMe(HttpServletRequest request) {

@@ -51,6 +51,7 @@ public class AuthenticationController {
     }
 
     private void authenticate(String username, String password) {
+
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (DisabledException e) {

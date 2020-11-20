@@ -32,7 +32,8 @@ public class InMemoryUserDetailsService implements UserDetailsService {
                 new InputStreamReader(
                         new ClassPathResource("data/users.json").getInputStream()));
         JsonArray object = gson.fromJson(jsonReader, JsonArray.class);
-
+//        gson.fromJson(jsonReader, new TypeToken<List<User>>() {
+//        }.getType());
         for (JsonElement entry : object) {
             User user = gson.fromJson(entry, User.class);
             inMemoryUsers.put(user.getUsername(), user);
