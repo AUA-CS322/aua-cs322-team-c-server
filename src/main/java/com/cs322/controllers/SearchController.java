@@ -11,11 +11,15 @@ import java.util.List;
 @RestController
 public class SearchController {
 
+    private final InMemoryUserDetailsService inMemoryUserDetailsService;
+
     @Autowired
-    private InMemoryUserDetailsService inMemoryUserDetailsService;
+    public SearchController(InMemoryUserDetailsService inMemoryUserDetailsService) {
+        this.inMemoryUserDetailsService = inMemoryUserDetailsService;
+    }
 
     @GetMapping("/search")
-    public List<User> search(String query){
+    public List<User> search(String query) {
         return inMemoryUserDetailsService.search(query);
     }
 }

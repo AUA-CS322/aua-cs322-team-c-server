@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.cs322</groupId>
-    <artifactId>AuthService</artifactId>
+    <artifactId>auaOrgChart</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>AUAOrg chart</name>
+    <name>AUAOrgChart</name>
 
     <properties>
         <java.version>11</java.version>
