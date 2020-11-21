@@ -32,6 +32,8 @@ public class User implements UserDetails {
     private String lastName;
     private String phone;
     private String photoUrl;
+    @JsonIgnore
+    private UUID parentId;
 
 
     public String getUsername() {
@@ -61,7 +63,6 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
 
     @JsonIgnore
     @Override

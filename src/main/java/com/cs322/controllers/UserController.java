@@ -1,5 +1,6 @@
 package com.cs322.controllers;
 
+import com.cs322.models.Relationship;
 import com.cs322.models.User;
 import com.cs322.services.InMemoryUserDetailsService;
 import com.cs322.utils.JwtTokenUtil;
@@ -31,5 +32,10 @@ public class UserController {
     @GetMapping("/users/{user}")
     public User getUser(@PathVariable(name = "user") String username) {
         return inMemoryDatabase.getUserByUsername(username);
+    }
+
+    @GetMapping("/org-chart/{user}")
+    public Relationship getUserOrgChart(@PathVariable(name = "user") String username) {
+        return inMemoryDatabase.getUserOrgChart(username);
     }
 }

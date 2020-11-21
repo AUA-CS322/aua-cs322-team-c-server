@@ -93,4 +93,16 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.firstName").value("FName18"))
                 .andExpect(jsonPath("$.lastName").value("LName18"));
     }
+
+    @Test
+    void getOrgChartSuccessful() throws Exception {
+        mockMvc.perform(
+                get("/org-chart/member14")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .header("Authorization", "Bearer " + token)
+        )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.parent").isNotEmpty())
+                .andExpect(jsonPath("$.children").isNotEmpty());
+    }
 }
