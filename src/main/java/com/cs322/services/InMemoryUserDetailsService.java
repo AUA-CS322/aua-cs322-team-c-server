@@ -4,7 +4,8 @@ import com.cs322.models.User;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,21 +13,26 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 
 @Service
 public class InMemoryUserDetailsService implements UserDetailsService {
 
     private final static Map<String, User> inMemoryUsers = new HashMap<>();
+    private static final String USER_NOT_FOUND = "USER_NOT_FOUND '%s'.";
+
 
     @PostConstruct
-    private void getAllUsers() throws FileNotFoundException {
-        JsonElement root = new JsonParser().parse(new FileReader("src/main/resources/data/users.json"));
-        JsonArray object = root.getAsJsonArray();
-
+    private void getAllUsers() throws IOException {
         Gson gson = new Gson();
+
+        JsonReader jsonReader = new JsonReader(
+                new InputStreamReader(
+                        new ClassPathResource("data/users.json").getInputStream()));
+        JsonArray object = gson.fromJson(jsonReader, JsonArray.class);
+
         for (JsonElement entry : object) {
             User user = gson.fromJson(entry, User.class);
             inMemoryUsers.put(user.getUsername(), user);
@@ -42,9 +48,9 @@ public class InMemoryUserDetailsService implements UserDetailsService {
         Optional<User> user = Optional.ofNullable(inMemoryUsers.get(username));
 
         if (!user.isPresent()) {
-            throw new UsernameNotFoundException(String.format("USER_NOT_FOUND '%s'.", username));
-        }
 
+            throw new UsernameNotFoundException(String.format(USER_NOT_FOUND, username));
+        }
         return user.get();
     }
 
