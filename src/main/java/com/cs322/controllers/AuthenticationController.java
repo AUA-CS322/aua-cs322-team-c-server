@@ -8,6 +8,7 @@ import com.cs322.models.JwtTokenRequest;
 import com.cs322.models.JwtTokenResponse;
 import com.cs322.services.InMemoryUserDetailsService;
 import com.cs322.utils.JwtTokenUtil;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +21,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 @RestController
 public class AuthenticationController {
+    private final Logger log = getLogger(this.getClass());
+
 
     private final AuthenticationManager authenticationManager;
     private final InMemoryUserDetailsService inMemoryUserDetailsService;
@@ -36,8 +41,10 @@ public class AuthenticationController {
 
     @RequestMapping(value = "${jwt.get.token.uri}", method = RequestMethod.POST)
     public ResponseEntity<Object> createAuthenticationToken(JwtTokenRequest authenticationRequest) {
-        if (authenticationRequest.isEmpty())
+        if (authenticationRequest.isEmpty()) {
+            log.info("createAuthenticationToken() object is empty");
             return new ResponseEntity<>(new JsonError(ErrorMessages.MISSING_DATA.name()), HttpStatus.BAD_REQUEST);
+        }
         try {
             authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
         } catch (AuthenticationException e) {
@@ -45,18 +52,22 @@ public class AuthenticationController {
         }
 
         final UserDetails userDetails = inMemoryUserDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-
+        log.info("createAuthenticationToken() userdetails " + userDetails.getUsername());
         final String token = jwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtTokenResponse(token));
+        log.info("createAuthenticationToken() token " + token);
+        JwtTokenResponse response = new JwtTokenResponse(token);
+        log.info("createAuthenticationToken() response " + response);
+        return ResponseEntity.ok(response);
     }
 
     private void authenticate(String username, String password) {
-
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (DisabledException e) {
+            log.error("authenticate() DisabledException " + e.getMessage());
             throw new AuthenticationException(ErrorMessages.USER_DISABLED.name(), e);
         } catch (BadCredentialsException e) {
+            log.error("authenticate() BadCredentialsException " + e.getMessage());
             throw new AuthenticationException(ErrorMessages.INVALID_CREDENTIALS.name(), e);
         }
     }
