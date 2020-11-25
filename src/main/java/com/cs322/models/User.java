@@ -18,6 +18,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @EqualsAndHashCode
 @ToString
+@Builder(access = AccessLevel.PUBLIC)
 public class User implements UserDetails {
     @JsonIgnore
     private UUID id;
@@ -75,4 +76,5 @@ public class User implements UserDetails {
     public String getPassword() {
         return password;
     }
+
 }
