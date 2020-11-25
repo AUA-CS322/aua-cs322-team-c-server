@@ -1,4 +1,4 @@
-package com.cs322.AuthService;
+package com.cs322;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

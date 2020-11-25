@@ -1,7 +1,18 @@
-package com.cs322.AuthService.Model;
+package com.cs322.models;
+
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 
+/**
+ * JWT Token Response POJO
+ */
+
+@Getter
+@Setter
+@EqualsAndHashCode
 public class JwtTokenResponse implements Serializable {
 
     private static final long serialVersionUID = 8317676219297719109L;
