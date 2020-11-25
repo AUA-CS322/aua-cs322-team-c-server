@@ -1,12 +1,17 @@
+
+
 package com.cs322.services;
 
+import com.cs322.models.Relationship;
 import com.cs322.models.User;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.stream.JsonReader;
-import org.slf4j.Logger;
-import org.springframework.core.io.ClassPathResource;
+import com.google.gson.JsonParser;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -14,41 +19,55 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.*;
-
-import static org.slf4j.LoggerFactory.getLogger;
 
 @Service
 public class InMemoryUserDetailsService implements UserDetailsService {
 
-    private final Logger log = getLogger(this.getClass());
     private final static Map<String, User> inMemoryUsers = new HashMap<>();
-    private static final String USER_NOT_FOUND = "USER_NOT_FOUND '%s'.";
 
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    private static class OrgTree {
+        private UUID id;
+        private UUID parent;
+    }
 
     @PostConstruct
-    private void getAllUsers() throws IOException {
-        Gson gson = new Gson();
+    private void getAllUsers() throws FileNotFoundException {
+        JsonElement users = new JsonParser().parse(new FileReader("src/main/resources/data/users.json"));
+        JsonArray usersArray = users.getAsJsonArray();
 
-        JsonReader jsonReader = new JsonReader(
-                new InputStreamReader(
-                        new ClassPathResource("data/users.json").getInputStream()));
-        JsonArray object = gson.fromJson(jsonReader, JsonArray.class);
-//        gson.fromJson(jsonReader, new TypeToken<List<User>>() {
-//        }.getType());
-        for (JsonElement entry : object) {
+        Gson gson = new Gson();
+        for (JsonElement entry : usersArray) {
             User user = gson.fromJson(entry, User.class);
             inMemoryUsers.put(user.getUsername(), user);
         }
-        log.debug("getAllUser() users " + inMemoryUsers);
+
+        List<OrgTree> orgTrees = new ArrayList<>();
+        JsonElement orgTree = new JsonParser().parse(new FileReader("src/main/resources/data/org-tree.json"));
+        JsonArray orgTreeArray = orgTree.getAsJsonArray();
+        for (JsonElement entry : orgTreeArray) {
+            OrgTree tree = gson.fromJson(entry, OrgTree.class);
+            orgTrees.add(tree);
+        }
+
+        for (OrgTree tr : orgTrees) {
+            for (Map.Entry<String, User> userEntry : inMemoryUsers.entrySet()) {
+                User user = userEntry.getValue();
+                if (user.getId().compareTo(tr.getId()) == 0) {
+                    user.setParentId(tr.parent);
+                }
+            }
+        }
     }
 
     public User getUserByUsername(String username) {
-        User user = inMemoryUsers.get(username);
-        log.info("getUserByUsername() user " + user);
-        return user;
+        return inMemoryUsers.get(username);
     }
 
     @Override
@@ -56,8 +75,7 @@ public class InMemoryUserDetailsService implements UserDetailsService {
         Optional<User> user = Optional.ofNullable(inMemoryUsers.get(username));
 
         if (!user.isPresent()) {
-            log.error("loadUserByUsername() UsernameNotFoundException " + username);
-            throw new UsernameNotFoundException(String.format(USER_NOT_FOUND, username));
+            throw new UsernameNotFoundException(String.format("USER_NOT_FOUND '%s'.", username));
         }
         return user.get();
     }
@@ -83,5 +101,21 @@ public class InMemoryUserDetailsService implements UserDetailsService {
             });
         }
         return list;
+    }
+
+    public Relationship getUserOrgChart(String username) {
+        Relationship relationship = new Relationship();
+        User user = getUserByUsername(username);
+
+        for (User u : inMemoryUsers.values()) {
+            if (user.getParentId() != null && user.getParentId().compareTo(u.getId()) == 0) {
+                relationship.addParent(u);
+            }
+            if (u.getParentId() != null && user.getId().compareTo(u.getParentId()) == 0) {
+                relationship.addChild(u);
+            }
+        }
+
+        return relationship;
     }
 }
