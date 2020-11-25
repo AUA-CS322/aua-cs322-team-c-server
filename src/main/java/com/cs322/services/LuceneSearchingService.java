@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
+import java.util.UUID;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -56,17 +57,18 @@ public class LuceneSearchingService {
             TopDocs topDocs = indexSearcher.search(query, 10);
             Document doc = indexSearcher.doc(topDocs.scoreDocs[0].doc);
             System.out.println(doc.get("username"));
-            User build = new User.builder()
+            return User.builder()
+                    .id(UUID.fromString(doc.get("id")))
                     .email(doc.get("email"))
                     .username(doc.get("username"))
+                    .password(doc.get("password"))
                     .position(doc.get("position"))
                     .department(doc.get("department"))
                     .location(doc.get("location"))
-                    .firstName(doc.get("firstname"))
-                    .lastName(doc.get("lastname"))
+                    .firstName(doc.get("firstName"))
+                    .lastName(doc.get("lastName"))
                     .phone(doc.get("phone"))
                     .photoUrl(doc.get("photoUrl")).build();
-            System.out.println();
         } catch (IOException e) {
             log.error("");
             e.printStackTrace();

@@ -88,8 +88,8 @@ public class LuceneIndexingService {
         jsonObjects.forEach(j -> {
             JsonObject object = (JsonObject) j;
             Set<String> fields = object.keySet();
-            fields.stream()
-                    .filter(s -> this.fields.contains(s))
+            fields
+//                    .filter(s -> this.fields.contains(s))
                     .forEach(str -> {
                         StringField field = new StringField(str,
                                 object.get(str).getAsString(),
