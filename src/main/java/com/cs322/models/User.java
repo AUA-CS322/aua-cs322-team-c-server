@@ -34,6 +34,8 @@ public class User implements UserDetails {
     private String lastName;
     private String phone;
     private String photoUrl;
+    @JsonIgnore
+    private UUID parentId;
 
 
     public String getUsername() {
@@ -76,5 +78,4 @@ public class User implements UserDetails {
     public String getPassword() {
         return password;
     }
-
 }
