@@ -1,10 +1,10 @@
-package com.cs322.AuthService.Security.Controller;
+package am.aua.cs322.orgchart.security.controller;
 
 
-import com.cs322.AuthService.Exceptions.AuthenticationException;
-import com.cs322.AuthService.Model.JwtTokenRequest;
-import com.cs322.AuthService.Model.JwtTokenResponse;
-import com.cs322.AuthService.Security.JwtInMemoryUserDetailsService;
+import am.aua.cs322.orgchart.exceptions.AuthenticationException;
+import am.aua.cs322.orgchart.model.JwtTokenRequest;
+import am.aua.cs322.orgchart.model.JwtTokenResponse;
+import am.aua.cs322.orgchart.security.JwtInMemoryUserDetailsService;
 import io.jsonwebtoken.Clock;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

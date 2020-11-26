@@ -1,4 +1,4 @@
-package com.cs322.AuthService.Model;
+package am.aua.cs322.orgchart.model;
 
 import java.io.Serializable;
 

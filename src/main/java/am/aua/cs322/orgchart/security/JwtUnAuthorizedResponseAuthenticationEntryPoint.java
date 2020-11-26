@@ -1,4 +1,4 @@
-package com.cs322.AuthService.Security;
+package am.aua.cs322.orgchart.security;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;

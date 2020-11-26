@@ -1,10 +1,9 @@
-package com.cs322.AuthService;
+package am.aua.cs322.orgchart;
 
-import com.cs322.AuthService.Security.JwtInMemoryUserDetailsService;
+import am.aua.cs322.orgchart.security.JwtInMemoryUserDetailsService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.userdetails.UserDetails;
 
 @SpringBootTest
 class AuthServiceApplicationTests {

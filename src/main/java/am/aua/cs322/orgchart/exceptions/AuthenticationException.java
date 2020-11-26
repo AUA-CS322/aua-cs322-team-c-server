@@ -1,4 +1,4 @@
-package com.cs322.AuthService.Exceptions;
+package am.aua.cs322.orgchart.exceptions;
 
 public class AuthenticationException extends RuntimeException {
     public AuthenticationException(String message, Throwable cause) {

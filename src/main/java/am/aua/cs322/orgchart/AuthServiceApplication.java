@@ -1,4 +1,4 @@
-package com.cs322.AuthService;
+package am.aua.cs322.orgchart;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,6 +1,6 @@
-package com.cs322.AuthService.Security.Config;
+package am.aua.cs322.orgchart.security.config;
 
-import com.cs322.AuthService.Security.JwtUnAuthorizedResponseAuthenticationEntryPoint;
+import am.aua.cs322.orgchart.security.JwtUnAuthorizedResponseAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +17,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 @Configuration
