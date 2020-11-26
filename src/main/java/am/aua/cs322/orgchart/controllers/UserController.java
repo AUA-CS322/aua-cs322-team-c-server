@@ -1,9 +1,9 @@
 package am.aua.cs322.orgchart.controllers;
 
+import am.aua.cs322.orgchart.models.Relationship;
 import am.aua.cs322.orgchart.models.User;
 import am.aua.cs322.orgchart.utils.JwtTokenUtil;
 import am.aua.cs322.orgchart.services.InMemoryUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,11 +13,14 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 public class UserController {
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
-    private InMemoryUserDetailsService inMemoryDatabase;
+    private final InMemoryUserDetailsService inMemoryDatabase;
+
+    public UserController(JwtTokenUtil jwtTokenUtil, InMemoryUserDetailsService inMemoryDatabase) {
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.inMemoryDatabase = inMemoryDatabase;
+    }
 
     @GetMapping("/users/user")
     public User getMe(HttpServletRequest request) {

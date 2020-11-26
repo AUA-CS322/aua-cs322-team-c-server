@@ -3,7 +3,6 @@ package am.aua.cs322.orgchart.filters;
 import am.aua.cs322.orgchart.utils.JwtTokenUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,18 +27,20 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class JwtTokenAuthorizationOncePerRequestFilter extends OncePerRequestFilter {
     private final Logger logger = getLogger(this.getClass());
 
-    @Autowired
-    @Qualifier("inMemoryUserDetailsService")
-    private UserDetailsService jwtInMemoryUserDetailsService;
+    private final UserDetailsService jwtInMemoryUserDetailsService;
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtil jwtTokenUtil;
 
     @Value("${jwt.http.request.header}")
     private String tokenHeader;
 
     private final AntPathMatcher matcher = new AntPathMatcher();
     private final List<String> whiteList = List.of("/authenticate");
+
+    public JwtTokenAuthorizationOncePerRequestFilter(@Qualifier("inMemoryUserDetailsService") UserDetailsService jwtInMemoryUserDetailsService, JwtTokenUtil jwtTokenUtil) {
+        this.jwtInMemoryUserDetailsService = jwtInMemoryUserDetailsService;
+        this.jwtTokenUtil = jwtTokenUtil;
+    }
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {

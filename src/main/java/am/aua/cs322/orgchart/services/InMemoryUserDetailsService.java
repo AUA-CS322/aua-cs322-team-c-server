@@ -1,7 +1,7 @@
-package com.cs322.services;
+package am.aua.cs322.orgchart.services;
 
-import com.cs322.models.Relationship;
-import com.cs322.models.User;
+import am.aua.cs322.orgchart.models.Relationship;
+import am.aua.cs322.orgchart.models.User;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

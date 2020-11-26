@@ -1,4 +1,4 @@
-package com.cs322.models;
+package am.aua.cs322.orgchart.models;
 
 import lombok.*;
 
