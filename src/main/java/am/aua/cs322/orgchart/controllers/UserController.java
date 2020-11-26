@@ -32,4 +32,9 @@ public class UserController {
     public User getUser(@PathVariable(name = "user") String username) {
         return inMemoryDatabase.getUserByUsername(username);
     }
+
+    @GetMapping("/org-chart/{user}")
+    public Relationship getUserOrgChart(@PathVariable(name = "user") String username) {
+        return inMemoryDatabase.getUserOrgChart(username);
+    }
 }
