@@ -3,6 +3,7 @@ package com.cs322.controllers;
 import com.cs322.models.Relationship;
 import com.cs322.models.User;
 import com.cs322.services.InMemoryUserDetailsService;
+import com.cs322.services.LuceneSearchingService;
 import com.cs322.utils.JwtTokenUtil;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +23,15 @@ public class UserController {
 
     private final InMemoryUserDetailsService inMemoryDatabase;
 
+    private final LuceneSearchingService luceneSearchingService;
+
+
     @Autowired
-    public UserController(JwtTokenUtil jwtTokenUtil, InMemoryUserDetailsService inMemoryDatabase) {
+    public UserController(JwtTokenUtil jwtTokenUtil, InMemoryUserDetailsService inMemoryDatabase,
+                          LuceneSearchingService luceneSearchingService) {
         this.jwtTokenUtil = jwtTokenUtil;
         this.inMemoryDatabase = inMemoryDatabase;
+        this.luceneSearchingService = luceneSearchingService;
     }
 
     @GetMapping("/users/user")
@@ -35,14 +41,14 @@ public class UserController {
                 .trim();
         String username = jwtTokenUtil.getUsernameFromToken(token);
         log.info("getMe() " + username);
-        User userByUsername = inMemoryDatabase.getUserByUsername(username);
+        User userByUsername = luceneSearchingService.getUser(username);
         log.debug("getMe() result " + userByUsername);
         return userByUsername;
     }
 
     @GetMapping("/users/{user}")
     public User getUser(@PathVariable(name = "user") String username) {
-        return inMemoryDatabase.getUserByUsername(username);
+        return luceneSearchingService.getUser(username);
     }
 
     @GetMapping("/org-chart/{user}")

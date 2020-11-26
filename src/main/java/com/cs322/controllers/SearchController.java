@@ -1,7 +1,7 @@
 package com.cs322.controllers;
 
 import com.cs322.models.User;
-import com.cs322.services.InMemoryUserDetailsService;
+import com.cs322.services.LuceneSearchingService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,17 +16,17 @@ public class SearchController {
     private final Logger log = getLogger(this.getClass());
 
 
-    private final InMemoryUserDetailsService inMemoryUserDetailsService;
+    private final LuceneSearchingService luceneSearchingService;
 
     @Autowired
-    public SearchController(InMemoryUserDetailsService inMemoryUserDetailsService) {
-        this.inMemoryUserDetailsService = inMemoryUserDetailsService;
+    public SearchController(LuceneSearchingService luceneSearchingService) {
+        this.luceneSearchingService = luceneSearchingService;
     }
 
     @GetMapping("/search")
     public List<User> search(String query) {
         log.info("search() query " + query);
-        List<User> result = inMemoryUserDetailsService.search(query);
+        List<User> result = luceneSearchingService.searchUsers(query);
         log.info("search() result " + result);
         return result;
     }

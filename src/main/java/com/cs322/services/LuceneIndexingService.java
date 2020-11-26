@@ -5,7 +5,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.Tokenizer;
+import org.apache.lucene.analysis.ngram.NGramTokenizer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
@@ -23,6 +27,8 @@ import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -84,26 +90,31 @@ public class LuceneIndexingService {
     }
 
     private void addDocuments(JsonArray jsonObjects) {
-        Document doc = new Document();
         jsonObjects.forEach(j -> {
+            Document doc = new Document();
             JsonObject object = (JsonObject) j;
             Set<String> fields = object.keySet();
-            fields
-//                    .filter(s -> this.fields.contains(s))
+            fields.stream()
+                    .filter(s -> this.fields.contains(s))
                     .forEach(str -> {
-                        StringField field = new StringField(str,
+                        StringField field;
+                        field = new StringField(/*object.get(str).getAsString()*/ str,
                                 object.get(str).getAsString(),
                                 Field.Store.YES);
+
                         doc.add(field);
+
                     });
+            doc.add(new StringField("json", j.toString(), Field.Store.YES));
+            try {
+                indexWriter.addDocument(doc);
+            } catch (IOException ex) {
+                log.error("addDocuments() error adding documents to the index " + ex.getMessage());
+                System.err.println();
+            }
             log.info("addDocuments() field added to doc " + j);
         });
-        try {
-            indexWriter.addDocument(doc);
-        } catch (IOException ex) {
-            log.error("addDocuments() error adding documents to the index " + ex.getMessage());
-            System.err.println();
-        }
+
     }
 
     public void finish() {
@@ -114,5 +125,24 @@ public class LuceneIndexingService {
         } catch (IOException ex) {
             System.err.println("We had a problem closing the index: " + ex.getMessage());
         }
+    }
+
+    public List<String> analyze(String text) throws IOException {
+        Analyzer analyzer = new Analyzer() {
+            @Override
+            protected TokenStreamComponents createComponents(String s, Reader reader) {
+                Tokenizer source = new NGramTokenizer(Version.LUCENE_48, reader, 1, 25);
+                return new TokenStreamComponents(source);
+            }
+        };
+
+        List<String> result = new ArrayList<String>();
+        TokenStream tokenStream = analyzer.tokenStream("username", text);
+        CharTermAttribute attr = tokenStream.addAttribute(CharTermAttribute.class);
+        tokenStream.reset();
+        while (tokenStream.incrementToken()) {
+            result.add(attr.toString());
+        }
+        return result;
     }
 }
