@@ -58,7 +58,22 @@ public class InMemoryUserDetailsService implements UserDetailsService {
             for(Map.Entry<String, User> userEntry: inMemoryUsers.entrySet()){
                 User user = userEntry.getValue();
                 if(user.getId().compareTo(tr.getId())==0){
-                    user.setParentId(tr.parent);
+                    UUID parentId = tr.parent;
+                    User parent  = null;
+                    for(User u: inMemoryUsers.values()){
+                        if(u.getId().compareTo(parentId)==0){
+                            parent = u;
+                        }
+                    }
+                    user.addParent(parent);
+                }
+            }
+        }
+
+        for(User u1: inMemoryUsers.values()){
+            for(User u2: inMemoryUsers.values()){
+                if(u2.getRelationship().getParent().size() != 0 && u1.getId().compareTo(u2.getRelationship().getParent().get(0).getId())==0){
+                    u1.addChild(u2);
                 }
             }
         }
@@ -102,18 +117,7 @@ public class InMemoryUserDetailsService implements UserDetailsService {
     }
 
     public Relationship getUserOrgChart(String username){
-        Relationship relationship = new Relationship();
         User user = getUserByUsername(username);
-
-        for(User u: inMemoryUsers.values()){
-            if(user.getParentId() != null && user.getParentId().compareTo(u.getId())==0){
-                relationship.addParent(u);
-            }
-            if(u.getParentId() != null && user.getId().compareTo(u.getParentId())==0){
-                relationship.addChild(u);
-            }
-        }
-
-        return relationship;
+        return user.getRelationship();
     }
 }

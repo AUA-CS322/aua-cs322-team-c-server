@@ -2,6 +2,7 @@ package com.cs322.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -35,6 +36,16 @@ public class User implements UserDetails {
     @JsonIgnore
     private UUID parentId;
 
+    @JsonIgnore
+    private Relationship relationship = new Relationship();
+
+    public void addParent(User user){
+        relationship.addParent(user);
+    }
+
+    public void addChild(User user){
+        relationship.addChild(user);
+    }
 
     public String getUsername() {
         return username;
