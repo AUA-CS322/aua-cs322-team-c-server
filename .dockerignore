@@ -1,0 +1,10 @@
+.mvn
+.idea
+.dockerignore
+*.iml
+mvnw*
+*.json
+target
+README.md
+users.json
+Dockerfile
