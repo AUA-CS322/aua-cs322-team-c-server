@@ -6,10 +6,12 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,6 +21,8 @@ import org.springframework.util.StringUtils;
 import javax.annotation.PostConstruct;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 
 @Service
@@ -36,18 +40,26 @@ public class InMemoryUserDetailsService implements UserDetailsService {
     }
 
     @PostConstruct
-    private void getAllUsers() throws FileNotFoundException {
-        JsonElement users = new JsonParser().parse(new FileReader("src/main/resources/data/users.json"));
-        JsonArray usersArray = users.getAsJsonArray();
+    private void getAllUsers() throws IOException {
+        JsonReader jsonReader = new JsonReader(
+                new InputStreamReader(
+                        new ClassPathResource("data/users.json").getInputStream()));
 
         Gson gson = new Gson();
+        JsonArray usersArray = gson.fromJson(jsonReader, JsonArray.class);
+
         for (JsonElement entry : usersArray) {
             User user = gson.fromJson(entry, User.class);
             inMemoryUsers.put(user.getUsername(), user);
         }
 
         List<OrgTree> orgTrees = new ArrayList<>();
-        JsonElement orgTree = new JsonParser().parse(new FileReader("src/main/resources/data/org-tree.json"));
+
+        jsonReader = new JsonReader(
+                new InputStreamReader(
+                        new ClassPathResource("data/org-tree.json").getInputStream()));
+        JsonArray orgTree = gson.fromJson(jsonReader, JsonArray.class);
+
         JsonArray orgTreeArray = orgTree.getAsJsonArray();
         for (JsonElement entry : orgTreeArray) {
             OrgTree tree = gson.fromJson(entry, OrgTree.class);
