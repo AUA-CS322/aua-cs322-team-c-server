@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
+import lombok.extern.log4j.Log4j2;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Tokenizer;
@@ -18,7 +19,6 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -32,12 +32,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import static org.slf4j.LoggerFactory.getLogger;
-
 @Service("indexing")
+@Log4j2
 public class LuceneIndexingService {
-    private final Logger log = getLogger(this.getClass());
-
     private List<String> fields;
 
     @Value("${indexing.fields}")

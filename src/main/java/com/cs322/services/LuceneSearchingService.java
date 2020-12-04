@@ -2,6 +2,7 @@ package com.cs322.services;
 
 import com.cs322.models.User;
 import com.google.gson.Gson;
+import lombok.extern.log4j.Log4j2;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
@@ -9,7 +10,6 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
@@ -20,14 +20,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.slf4j.LoggerFactory.getLogger;
-
 @Service
 @DependsOn("indexing")
+@Log4j2
 public class LuceneSearchingService {
-    private final Logger log = getLogger(this.getClass());
-
-
     private IndexSearcher indexSearcher;
 
     @Value("${indexing.path}")
@@ -36,11 +32,13 @@ public class LuceneSearchingService {
     }
 
     private String indexPath;
+    private Gson gson;
+
 
     @PostConstruct
     public void setUp() {
         try {
-
+            gson = new Gson();
             Directory indexDirectory = FSDirectory.open(new File(indexPath));
             IndexReader indexReader = DirectoryReader.open(indexDirectory);
             indexSearcher = new IndexSearcher(indexReader);
@@ -55,9 +53,7 @@ public class LuceneSearchingService {
             Query query =
                     new PrefixQuery(new Term("username", username));
 
-
             TopDocs topDocs = indexSearcher.search(query, 1);
-            Gson gson = new Gson();
             Document doc = indexSearcher.doc(topDocs.scoreDocs[0].doc);
             String s = doc.get("json");
             User user = gson.fromJson(s, User.class);
@@ -75,7 +71,6 @@ public class LuceneSearchingService {
         List<User> userList = new ArrayList<>();
         try {
             TopDocs topDocs = search(strQuery);
-            Gson gson = new Gson();
             for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
                 Document doc = indexSearcher.doc(scoreDoc.doc);
                 String s = doc.get("json");

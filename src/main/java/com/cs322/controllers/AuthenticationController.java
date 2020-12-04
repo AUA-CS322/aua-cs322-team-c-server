@@ -8,7 +8,7 @@ import com.cs322.models.JwtTokenRequest;
 import com.cs322.models.JwtTokenResponse;
 import com.cs322.services.InMemoryUserDetailsService;
 import com.cs322.utils.JwtTokenUtil;
-import org.slf4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,13 +21,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import static org.slf4j.LoggerFactory.getLogger;
-
 @RestController
+@Log4j2
 public class AuthenticationController {
-    private final Logger log = getLogger(this.getClass());
-
-
     private final AuthenticationManager authenticationManager;
     private final InMemoryUserDetailsService inMemoryUserDetailsService;
     private final JwtTokenUtil jwtTokenUtil;
