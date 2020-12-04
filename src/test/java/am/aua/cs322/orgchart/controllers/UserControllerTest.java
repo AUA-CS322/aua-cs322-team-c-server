@@ -37,7 +37,6 @@ class UserControllerTest {
 
     private static String token;
 
-
     @BeforeAll
     void setUp() throws Exception {
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();

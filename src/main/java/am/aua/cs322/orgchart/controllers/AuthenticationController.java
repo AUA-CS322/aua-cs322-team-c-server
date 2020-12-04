@@ -6,8 +6,9 @@ import am.aua.cs322.orgchart.exceptions.AuthenticationException;
 import am.aua.cs322.orgchart.models.JsonError;
 import am.aua.cs322.orgchart.models.JwtTokenRequest;
 import am.aua.cs322.orgchart.models.JwtTokenResponse;
-import am.aua.cs322.orgchart.utils.JwtTokenUtil;
 import am.aua.cs322.orgchart.services.InMemoryUserDetailsService;
+import am.aua.cs322.orgchart.utils.JwtTokenUtil;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Objects;
 
 @RestController
+@Log4j2
 public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
@@ -38,8 +40,10 @@ public class AuthenticationController {
 
     @RequestMapping(value = "${jwt.get.token.uri}", method = RequestMethod.POST)
     public ResponseEntity<Object> createAuthenticationToken(JwtTokenRequest authenticationRequest) {
-        if (authenticationRequest.isEmpty())
+        if (authenticationRequest.isEmpty()) {
+            log.info("createAuthenticationToken() object is empty");
             return new ResponseEntity<>(new JsonError(ErrorMessages.MISSING_DATA.name()), HttpStatus.BAD_REQUEST);
+        }
         try {
             authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
         } catch (AuthenticationException e) {
@@ -47,9 +51,12 @@ public class AuthenticationController {
         }
 
         final UserDetails userDetails = inMemoryUserDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-
+        log.info("createAuthenticationToken() userdetails " + userDetails.getUsername());
         final String token = jwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtTokenResponse(token));
+        log.info("createAuthenticationToken() token " + token);
+        JwtTokenResponse response = new JwtTokenResponse(token);
+        log.info("createAuthenticationToken() response " + response);
+        return ResponseEntity.ok(response);
     }
 
     private void authenticate(String username, String password) {
@@ -59,8 +66,10 @@ public class AuthenticationController {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (DisabledException e) {
+            log.error("authenticate() DisabledException " + e.getMessage());
             throw new AuthenticationException(ErrorMessages.USER_DISABLED.name(), e);
         } catch (BadCredentialsException e) {
+            log.error("authenticate() BadCredentialsException " + e.getMessage());
             throw new AuthenticationException(ErrorMessages.INVALID_CREDENTIALS.name(), e);
         }
     }
