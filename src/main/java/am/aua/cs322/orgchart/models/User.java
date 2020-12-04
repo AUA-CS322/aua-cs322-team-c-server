@@ -35,6 +35,16 @@ public class User implements UserDetails {
     @JsonIgnore
     private UUID parentId;
 
+    @JsonIgnore
+    private Relationship relationship = new Relationship();
+
+    public void addParent(User user){
+        relationship.addParent(user);
+    }
+
+    public void addChild(User user){
+        relationship.addChild(user);
+    }
 
     public String getUsername() {
         return username;

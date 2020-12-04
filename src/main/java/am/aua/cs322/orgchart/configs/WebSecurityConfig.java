@@ -1,7 +1,7 @@
 package am.aua.cs322.orgchart.configs;
 
 import am.aua.cs322.orgchart.filters.JwtTokenAuthorizationOncePerRequestFilter;
-import am.aua.cs322.orgchart.services.JwtUnAuthorizedResponseAuthenticationEntryPoint;
+import am.aua.cs322.orgchart.security.JwtUnAuthorizedResponseAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;

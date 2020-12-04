@@ -43,7 +43,7 @@ public class JwtTokenAuthorizationOncePerRequestFilter extends OncePerRequestFil
     }
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    protected boolean shouldNotFilter(HttpServletRequest request) {
         return whiteList.stream().anyMatch(s -> matcher.match(s, request.getServletPath()));
     }
 
