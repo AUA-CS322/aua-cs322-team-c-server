@@ -1,6 +1,9 @@
 package com.cs322.models;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 

@@ -1,12 +1,12 @@
 package com.cs322.controllers;
 
 
+import com.cs322.errors.ErrorMessages;
 import com.cs322.exceptions.AuthenticationException;
 import com.cs322.models.JsonError;
 import com.cs322.models.JwtTokenRequest;
 import com.cs322.models.JwtTokenResponse;
 import com.cs322.services.InMemoryUserDetailsService;
-import com.cs322.errors.ErrorMessages;
 import com.cs322.utils.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +16,10 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Objects;
 
