@@ -36,7 +36,7 @@ public class InMemoryUserDetailsService implements UserDetailsService {
     }
 
     @PostConstruct
-    private void getAllUsers() throws FileNotFoundException {
+    private void initDataFromFiles() throws FileNotFoundException {
         JsonElement users = new JsonParser().parse(new FileReader("src/main/resources/data/users.json"));
         JsonArray usersArray = users.getAsJsonArray();
 
@@ -87,7 +87,7 @@ public class InMemoryUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> user = Optional.ofNullable(inMemoryUsers.get(username));
 
-        if (!user.isPresent()) {
+        if (user.isEmpty()) {
             throw new UsernameNotFoundException(String.format("USER_NOT_FOUND '%s'.", username));
         }
         return user.get();

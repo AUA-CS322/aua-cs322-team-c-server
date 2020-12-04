@@ -28,12 +28,9 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class JwtTokenAuthorizationOncePerRequestFilter extends OncePerRequestFilter {
     private final Logger logger = getLogger(this.getClass());
 
-    @Autowired
-    @Qualifier("inMemoryUserDetailsService")
-    private UserDetailsService jwtInMemoryUserDetailsService;
+    private final UserDetailsService jwtInMemoryUserDetailsService;
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtil jwtTokenUtil;
 
     @Value("${jwt.http.request.header}")
     private String tokenHeader;
@@ -41,8 +38,13 @@ public class JwtTokenAuthorizationOncePerRequestFilter extends OncePerRequestFil
     private final AntPathMatcher matcher = new AntPathMatcher();
     private final List<String> whiteList = List.of("/authenticate");
 
+    public JwtTokenAuthorizationOncePerRequestFilter(@Qualifier("inMemoryUserDetailsService") UserDetailsService jwtInMemoryUserDetailsService, JwtTokenUtil jwtTokenUtil) {
+        this.jwtInMemoryUserDetailsService = jwtInMemoryUserDetailsService;
+        this.jwtTokenUtil = jwtTokenUtil;
+    }
+
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    protected boolean shouldNotFilter(HttpServletRequest request) {
         return whiteList.stream().anyMatch(s -> matcher.match(s, request.getServletPath()));
     }
 
