@@ -1,4 +1,4 @@
-package com.cs322.services;
+package am.aua.cs322.orgchart.services;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -133,7 +133,7 @@ public class LuceneIndexingService {
             }
         };
 
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         TokenStream tokenStream = analyzer.tokenStream("username", text);
         CharTermAttribute attr = tokenStream.addAttribute(CharTermAttribute.class);
         tokenStream.reset();

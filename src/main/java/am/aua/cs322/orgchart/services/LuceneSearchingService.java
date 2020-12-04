@@ -1,6 +1,6 @@
-package com.cs322.services;
+package am.aua.cs322.orgchart.services;
 
-import com.cs322.models.User;
+import am.aua.cs322.orgchart.models.User;
 import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j2;
 import org.apache.lucene.document.Document;
